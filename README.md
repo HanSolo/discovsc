@@ -1,5 +1,10 @@
 ## Disco API plugin for Visual Studio Code
 
+
+
+![Logo](https://github.com/HanSolo/discovsc/raw/main/discoduke.png)
+
+
 The DiscoVSC plugin will offer you the ability to discover and download a Java SDK from a list of different distributions.
 
 When you've started the extension you have to open the 'command palette' by clicking on the gear icon in the lower
