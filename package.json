@@ -2,7 +2,7 @@
     "name": "discovsc",
     "displayName": "discovsc",
     "description": "",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "publisher": "GerritGrunwald",
     "engines": {
         "vscode": "^1.23.0"

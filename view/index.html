@@ -168,7 +168,6 @@
     </div>
   </div>
 
-
   <script>
     const baseUrl = 'https://api.foojay.io';
     const scope   = 'discovery_scope_id=public&discovery_scope_id=build_of_openjdk';
@@ -177,7 +176,6 @@
     var   selectedPkgs                = [];
     var   selectedPkg                 = null;
     var   selectedPkgsForMajorVersion = [];
-    var   downloadUri                 = null;
     var   javafxBundled;
     var   selectedMajorVersion;
     var   selectedVersionNumber;
@@ -719,7 +717,6 @@
         downloadButton.disabled = false;
       } else {
         selectedPkg = null;
-        downloadUri = null;
         let filenameLabel = document.getElementById('filenameLabel');
         filenameLabel.innerHTML = '-';
         let downloadButton = document.getElementById('downloadButton');
@@ -729,21 +726,22 @@
     
     function download() {
       if (selectedPkg == null || selectedPkg == undefined) { return; }
-      let promise = getDownloadLink(selectedPkg.id, selectedPkg.directly_downloadable);
-        promise.then(function(uri) {
-          downloadUri = uri;
-        }, function() { 
+      getDownloadLink(selectedPkg.id, selectedPkg.directly_downloadable).then(
+        function(uri) {
+          // Success
+          if (uri == null || uri == undefined) { return; }
+          document.getElementById('dl-frame').src = uri
+        }, 
+        function() {
+          // Failure
           console.log("Error")
           selectedPkg = null;
-          downloadUri = null;
           let filenameLabel = document.getElementById('filenameLabel');
           filenameLabel.innerHTML = '-';
-        });
+        }
+      );
+    }          
 
-      if (downloadUri == null || downloadUri == undefined) { return; }
-      document.getElementById('dl-frame').src = downloadUri;
-    }
-  
     async function getMaintainedMajorVersions() {
       const url            = baseUrl + '/disco/v2.0/major_versions?ea=true&ga=true&maintained=true&include_build=true';
       let   major_versions = await makeRequest("GET", url);
@@ -854,9 +852,21 @@
     function getDistributionFromText(text) {
       if (null == text || text === undefined) { return ''; }
       switch (text) {
+        case "zulu_prime":
+        case "ZULU_PRIME":
+        case "ZuluPrime":
+        case "zuluprime":
+        case "ZULUPRIME":
+          return 'zulu_prime';
         case "zulu":
         case "ZULU":
         case "Zulu":
+        case "zulu_core":
+        case "ZULU_CORE":
+        case "Zulu_Core":
+        case "zulucore":
+        case "ZULUCORE":
+        case "ZuluCore":
           return 'zulu';
         case "aoj":
         case "AOJ":
@@ -894,6 +904,10 @@
         case "GraalVMCE16":
         case "GraalVM_CE16":
           return 'graalvm_ce16';
+        case "jetbrains":
+        case "JetBrains":
+        case "JETBRAINS":
+          return 'jetbrains';
         case "liberica":
         case "LIBERICA":
         case "Liberica":
